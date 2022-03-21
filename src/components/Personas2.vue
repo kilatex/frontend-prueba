@@ -2,9 +2,9 @@
 <div class="personas2 active" id="personas2">
 
 
-        <div class="mt-5 px-8">
-            <div class="personas-2 bg-white p-5 rounded-xl w-full">
-                <div class="busqueda  flex justify-between ">
+        <div class="mt-5 px-8   ">
+            <div class="personas-2   bg-white p-5 rounded-xl w-full">
+                <div class="busqueda flex justify-between ">
                     <div class="input-busqueda shadow border-2 rounded-xl w-7/12 flex">
                         <select  name="" id="" class="select-busqueda  bg-white  h-10 ">
                             <option value="1" class="" selected>Nombre</option>
@@ -24,44 +24,157 @@
 
                 </div>
 
-                <div class="personas-lista mt-8">
+                <div class="container-personas2 ">
+                    <div class=" mt-8  personas-lista">
 
-                    <div class="carta flex border-b-2 py-3" v-for="persona2 in personas2" :key="persona2.id">
-                        <div class=" mx-4 " >
-                            <span v-if="!persona2.img">
-                            <img src="../assets/img/profile-default.png" class="w-12 h-12  rounded-full" alt="" srcset="">
-                            </span>
-                            <span v-else>
-                                imagen
-                            </span>
+                        <div class="carta flex border-b-2 py-3" v-for="persona2 in users" :key="persona2.id">
+                            <div class=" mx-4 " >
+                                <span v-if="!persona2.img">
+                                <img src="../assets/img/profile-default.png" class="w-12 h-12  rounded-full" alt="" srcset="">
+                                </span>
+                                <span v-else>
+                                <img :src="url+'api/person/avatar/'+persona2.img" class="w-12 h-12  rounded-full" alt="" srcset="">
+                                </span>
+                            </div>
+                            <div class="w-4/12 self-center  ">
+                            {{persona2.first_name}} {{persona2.last_name}}
+                            </div>
+                            <div class="w-4/12  self-center  text-center ">
+                                {{persona2.document}}
+                            </div>
+                            <div class="w-3/12  self-center flex justify-end   ">
+                                <a href="#" @click.prevent="confirmDelete(persona2.id)" class="text-2xl mx-1" ><i class="fas fa-trash-alt"></i></a>
+                                <a href="#"  class="text-2xl mx-1"><i class="fas fa-edit"></i></a>
+                                <a href="#" class="text-2xl mx-1"><i class="fas fa-eye"></i></a>
+                            </div>
                         </div>
-                        <div class="w-4/12 self-center  ">
-                           {{persona2.first_name}} {{persona2.last_name}}
-                        </div>
-                        <div class="w-4/12  self-center  text-center ">
-                            {{persona2.document}}
-                        </div>
-                        <div class="w-3/12  self-center flex justify-end   ">
-                            <a href="#" class="text-2xl mx-1" ><i class="fas fa-trash-alt"></i></a>
-                            <a href="#" class="text-2xl mx-1"><i class="fas fa-edit"></i></a>
-                            <a href="#" class="text-2xl mx-1"><i class="fas fa-eye"></i></a>
-                        </div>
+                        <div class="carta flex border-b-2 py-3" v-for="persona2 in users" :key="persona2.id">
+                            <div class=" mx-4 " >
+                                <span v-if="!persona2.img">
+                                <img src="../assets/img/profile-default.png" class="w-12 h-12  rounded-full" alt="" srcset="">
+                                </span>
+                                <span v-else>
+                                <img :src="url+'api/person/avatar/'+persona2.img" class="w-12 h-12  rounded-full" alt="" srcset="">
+                                </span>
+                            </div>
+                            <div class="w-4/12 self-center  ">
+                            {{persona2.first_name}} {{persona2.last_name}}
+                            </div>
+                            <div class="w-4/12  self-center  text-center ">
+                                {{persona2.document}}
+                            </div>
+                            <div class="w-3/12  self-center flex justify-end   ">
+                                <a href="#" @click.prevent="confirmDelete(persona2.id)" class="text-2xl mx-1" ><i class="fas fa-trash-alt"></i></a>
+                                <a href="#"  class="text-2xl mx-1"><i class="fas fa-edit"></i></a>
+                                <a href="#" class="text-2xl mx-1"><i class="fas fa-eye"></i></a>
+                            </div>
+                        </div>        
+                
                     </div>
 
                 </div>
+
             </div>
-        
+    
+
+          
         </div>
 </div>
 </template>
 
 <script>
+
+import global from '../global';
+import axios from 'axios';
+import Swal from 'sweetalert2';
+window.Swal = Swal;
 export default {
     name: 'Personas2',
-    props: ['personas2'],
+    components:{
+    },
+    data(){
+        return {
+            url: global.url,
+            users:{
+            },
+            paginacion:{},
+            laravelData: {},
+            headers : {
+              'Authorization' : localStorage.getItem('access_token')
+            },
+        }
+    },
+    mounted(){
+        this.getResults()
+    },
+   methods:{
+        confirmDelete(id){
+            Swal.fire({
+                title: '¿Está seguro de eliminar este usuario?',
+                showDenyButton: true,
+                confirmButtonText: 'Eliminar',
+                denyButtonText: `Cancelar`,
+            }).then((result) => {
+            /* Read more about isConfirmed, isDenied below */
+            if (result.isConfirmed) {
+                axios.delete(this.url+'api/person/'+id, {headers:this.headers}).
+                then(res => {
+                    console.log(res);
+                    this.getResults();
+                    Swal.fire('Usuario Eliminado', '', 'success')
+                })
+            } else if (result.isDenied) {
+                Swal.fire('Usuario No eliminado', '', 'info')
+            }
+                })
+        },
+        getResults(){
+             axios.get(this.url+'api/person/2', {headers: this.headers}  ).
+            then(res => {
+                this.users = res.data.people;
+                console.log(res.data);
+            }).catch(err => {
+                if(err){
+                    this.logout(false);
+                }
+            });
+        },
+        logout(band){
+
+            localStorage.removeItem('access_token');
+            localStorage.removeItem('user');
+            if(!band){
+                this.$router.push('/login'); 
+            }
+
+        },
+    }
+
 }
 </script>
 
 <style>
 
+.personas-2{
+    display: flex !important;
+    flex-direction: column;
+}
+.personas-lista{
+    overflow: auto;
+    height: 55vh !important;
+}
+.container-personas2{
+    height: 100%;
+}
+@media (max-width: 1080px) { 
+    .personas-lista{
+        height: 500px;
+        overflow: scroll;
+    }
+}
+@media (max-height: 800px) { 
+    .personas-lista{
+        height: 55vh;
+    }
+}
 </style>

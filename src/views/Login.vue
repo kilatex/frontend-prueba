@@ -57,6 +57,9 @@
                                 </div>
                             
                         </div>
+                        <div v-if="message" class="mt-3 text-center text-red-600">
+                            {{message}}
+                        </div>
                         <div class="text-center mt-10 ">
                             <input type="submit"  class="p-3 cursor-pointer rounded-md bg-blue-600 hover:bg-blue-800  transition-all  text-sm text-white" value="Siguiente >"/>
                             <div  class="p-3 my-5  text-gray-500   text-sm ">¿No tienes cuenta?,
@@ -80,7 +83,8 @@ export default {
             user: {
                 email: '',
                 password: ''
-            }
+            },
+            message: ''
         }
     },
         methods:{
@@ -92,9 +96,15 @@ export default {
 
             axios.post(this.url+'login',form).
                 then(res => {
+                    console.log(res);
+                    if(res.data.code == 200){
                     localStorage.setItem('user',JSON.stringify(res.data.user));
                     localStorage.setItem('access_token','Bearer '+res.data.access_token);
-                  this.$router.push('/dashboard'); 
+                    this.$router.push('/dashboard'); 
+                    }
+                    else if(res.data.code == 400){
+                        this.message = res.data.message
+                    }
 
                 }).
                 catch(error => {
