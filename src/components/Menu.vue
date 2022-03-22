@@ -1,6 +1,6 @@
 <template>
     <div class="bloque-1  flex  justify-center w-1/12">
-        <ul class="self-center text-3xl ">
+        <ul class="self-center lista-menu text-3xl ">
             <li class="my-10 ">
                 <router-link to ="/dashboard" class="flex  flex-col">
                 <i class=" text-gray-400 fas self-center fa-home"></i> <span class="text-sm text-center">Inicio</span>
@@ -28,6 +28,17 @@
 
 <script>
 export default {
-    name: 'Menu'
+    name: 'Menu',
+    methods:{
+          logout(band){
+
+            localStorage.removeItem('access_token');
+            localStorage.removeItem('user');
+            if(!band){
+                this.$router.push('/login'); 
+            }
+
+        },
+    }
 }
 </script>

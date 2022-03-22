@@ -1,9 +1,10 @@
 <template>
+<div class="">
     <div class="container-dashboard p-3">
         <div class="grid-dashboard shadow-md p-3  rounded-lg flex ">
           <Menu></Menu>
 
-            <div class="flex w-full bloque2y3  ">     
+            <div class="flex w-full bloque2y3">     
                
                 <personas-1></personas-1>
 
@@ -15,6 +16,7 @@
                         <a href="#" class="self-center text-xl  mx-1"><i class="text-gray-500 fas self-center fa-cog "></i></a>
                         <img src="../assets/img/profile-default.png" alt="" class="self-center mx-1 w-12 h-12 rounded-full">
                     </div>
+
                     <div class="menu  px-10 mt-8 text-xl flex justify-center">
                         <div class="w-4/12 text-center">
                             <button   id="buttonNuevaPersona"  @click="nuevaPersona()"><i class="fas fa-user text-3xl relative top-1 "></i> Nuevo Paciente</button>
@@ -33,7 +35,7 @@
                     <personas-2></personas-2>
                     </div>
 
-                    <registrar-persona id="form_new_person" > </registrar-persona>
+                    <registrar-persona id="form_new_person"> </registrar-persona>
                
                     
 
@@ -44,6 +46,8 @@
         
         </div>
     </div>
+</div>
+    
 </template>
 
 <script>
@@ -150,6 +154,9 @@ export default {
 </script>
 
 <style>
+body{
+background: url('../assets/img/bg-dashboard.png') fixed center  ;
+}
 .bloque-3 .bloque-personas2{
     max-height: 70vh;
 }
@@ -157,6 +164,7 @@ export default {
     display: none;
     height:10vh !important;
 }
+
 #personas2{
     display: none;
 }
@@ -170,10 +178,10 @@ export default {
     color: blue;
 }
 .container-dashboard{
-    background: url('../assets/img/bg-dashboard.png') fixed center  ;
-    height: auto;
+    height: auto !important;
 }
-.grid-dashboard{
+
+.grid-dashboard, .grid-editar-perfil{
     height: 97vh;
     background: rgba(255, 255, 255, 0.55);
 }
@@ -185,22 +193,43 @@ export default {
         flex-direction: column-reverse;
         height: 100%;
     }
+  
     .bloque-3{
         margin-bottom: 50px;
     }
     .bloque2y3 .bloque-2{
-        width: 95% !important;
+        width: 94% !important;
         margin: 0 auto; 
     }
-    .grid-dashboard{
+    .container-dashboard , .grid-dashboard{
+        height: auto !important;
+    }
+    .container-dashboard{
         height: auto;
     }
-
     #form_new_person{
         margin-bottom: 300px;
     }
     
 }
 
+
+@media (max-width:690px){
+    .grid-dashboard, .grid-editar-perfil{
+        display: block;
+    }
+    .bloque-1{
+        width: 100% !important;
+    }
+    .lista-menu{
+        display: flex;
+    }
+    .lista-menu li{
+        margin-bottom: 20px;
+        margin-left: 10px;
+        margin-right: 10px;
+    }
+    
+}
 
 </style>

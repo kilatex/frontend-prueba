@@ -8,13 +8,13 @@
                                         <div class="input-box  w-5/12 mb-4">
                                         <label for="" class="block  text-gray-400 ">Nombre</label>
                                         <input type="text"    class="w-full h-10 p-1 outline-0 rounded-lg shadow-input" v-model="user.first_name" placeholder="Nombre">
-                                        <span class="font-bold text-red-600" v-if="errors.first_name">Nombre Requerido</span>
+                                        <span class="font-bold text-red-600" v-if="errors.first_name">Nombre NO Valido</span>
                                         </div>
 
                                         <div class="input-box  w-5/12">
                                         <label for="" class="block  text-gray-400 ">Apellido</label>
                                         <input type="text"  class="w-full outline-0 h-10 p-1 rounded-lg shadow-input" v-model="user.last_name" placeholder="Apellido">
-                                        <span class="font-bold text-red-600" v-if="errors.last_name">Apellido Requerido</span>
+                                        <span class="font-bold text-red-600" v-if="errors.last_name">Apellido NO Valido</span>
 
                                         </div>  
                                                             
@@ -23,13 +23,13 @@
                                         <div class="input-box  w-5/12 mb-4">
                                         <label for="" class="block  text-gray-400" >DNI</label>
                                         <input type="text"   class="w-full h-10 p-1 outline-0 rounded-lg shadow-input" v-model="user.document" placeholder="DNI">
-                                        <span class="font-bold text-red-600" v-if="errors.document">Documento Inválido</span>
+                                        <span class="font-bold text-red-600" v-if="errors.document">{{errors.document[0]}}</span>
                                         </div>
 
                                         <div class="input-box  w-5/12">
                                         <label for="" class="block  text-gray-400 ">Email</label>
                                         <input type="email"   class="w-full outline-0 h-10 p-1 rounded-lg shadow-input" v-model="user.email" placeholder="Email">
-                                        <span class="font-bold text-red-600" v-if="errors.email">Email Inválido</span>
+                                        <span class="font-bold text-red-600" v-if="errors.email">{{errors.email[0]}}</span>
                                         </div>                  
                                     </div>  
                                     <div class="inputs  px-1 mx-3 flex justify-between ">
@@ -62,7 +62,7 @@
                                 </div>
                             </div>
                         </form>
-                    </div>
+    </div>
 </template>
 
 <script>
@@ -106,14 +106,13 @@ export default {
                 then(res => {
                         if(res.data.code == 200){
 
+                            Swal.fire('Registro Exitoso', 'Usuario registrado correctamente','success');
                             if(this.user.type_person == 1){
                                 this.users_1.push(res.data.persona);
                             }else if(this.user.type_person == 1){
                                 this.users_2.push(res.data.persona);
                             }
                             this.clearForm();
-                            Swal.fire('Registro Exitoso', 'Usuario registrado correctamente','success');
-                            // FALTA QUE REDIRIJA Y LIMPIE EL FORMULARIO
                             
                             this.$router.push('/dashboard');
                         }if(res.data.code == 400){
@@ -126,9 +125,8 @@ export default {
                 }).
                 catch(err => {
                     console.log(err);
-                    this.errors = err.data.error;
 
-                })
+                });
         },
         fileChange(){
         this.user.img =  this.$refs.file.files[0];
